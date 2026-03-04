@@ -1,6 +1,8 @@
 Since you already have a working environment with a **Quadro P2000**, training your own YOLO model is the natural next step. Training allows the AI to recognize specific objects (like a custom "slouch" pose) rather than just general body points.
 
-Here is the professional workflow for training YOLOv8.
+Here is the professional workflow for training YOLOv8. - YOLOv26.
+
+A6000 V100 QP6000
 
 ---
 
