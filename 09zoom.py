@@ -7,7 +7,6 @@ from collections import deque
 #  CONFIG
 # ─────────────────────────────────────────────
 RESOLUTION        = (1280, 720)
-DISPLAY_SCALE     = 2             # scale up all pixels by this factor
 MODEL_SIZE        = 'n'
 CONF              = 0.4
 IOU               = 0.45
@@ -19,14 +18,14 @@ HISTORY_LEN       = 20            # frames kept in rolling window
 ZOOM_IN_THRESH    = 1.8           # hands wider than this → keep zooming in
 ZOOM_OUT_THRESH   = 0.6           # hands closer than this → keep zooming out
 ALIGN_THRESH      = 0.5           # max vertical offset between wrists (norm) to count as horizontal
-SLIDER_SPEED      = 0.015         # slider change per frame
+SLIDER_SPEED      = 0.01         # slider change per frame
 
 # Brightness: both hands must be above shoulders to activate
 # Above eye line → brighten, between eyes and shoulders → darken
 
 # Zoom range applied to the live feed
-ZOOM_MIN          = 1.0
-ZOOM_MAX          = 3.0
+ZOOM_MIN          = 0.5
+ZOOM_MAX          = 2.0
 
 # ─────────────────────────────────────────────
 #  MODEL
@@ -39,7 +38,7 @@ model = YOLO(f'yolo26{MODEL_SIZE}-pose.pt')
 # ─────────────────────────────────────────────
 norm_dist_history   = deque(maxlen=HISTORY_LEN)
 
-zoom_value   = 0.0   # 0.0 → ZOOM_MIN,  1.0 → ZOOM_MAX
+zoom_value   = 1/3   # maps to 1.0x (camera resolution)
 bright_value = 0.5   # 0.0 → dark,  1.0 → bright  (0.5 = neutral)
 invert_on    = False  # toggled by knee raise
 knee_was_up  = False  # edge detection for toggle
@@ -55,14 +54,6 @@ def apply_brightness(frame, factor):
     scale = factor * 2.0   # 0→0, 0.5→1.0, 1.0→2.0
     return np.clip(frame.astype(np.float32) * scale, 0, 255).astype(np.uint8)
 
-
-def apply_zoom(frame, zoom_factor):
-    """Centre-crop then upscale → gives a zoom effect on the live feed."""
-    h, w   = frame.shape[:2]
-    scale  = 1.0 / zoom_factor
-    nh, nw = int(h * scale), int(w * scale)
-    y1, x1 = (h - nh) // 2, (w - nw) // 2
-    return cv2.resize(frame[y1:y1 + nh, x1:x1 + nw], (w, h))
 
 
 def draw_vslider(frame, x, y, h, value, label, color):
@@ -151,7 +142,7 @@ while cap.isOpened():
                 if c(11) > 0.5 and c(12) > 0.5:
                     hip_mid_y = (xy(11)[1] + xy(12)[1]) / 2.0
                     if lw[1] > hip_mid_y and rw[1] > hip_mid_y:
-                        zoom_value   = 0.0
+                        zoom_value   = 1/3
                         bright_value = 0.5
                         norm_dist_history.clear()
 
@@ -187,7 +178,6 @@ while cap.isOpened():
     if invert_on:
         canvas = cv2.bitwise_not(canvas)
     actual_zoom = ZOOM_MIN + zoom_value * (ZOOM_MAX - ZOOM_MIN)
-    canvas      = apply_zoom(canvas, actual_zoom)
 
     fh, fw = canvas.shape[:2]
 
@@ -211,10 +201,10 @@ while cap.isOpened():
         cv2.putText(canvas, f"NormDist: {nd:.2f}",
                     (60, fh - 85), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (180, 180, 180), 1)
 
-    # ── Scale up for display ────────────────────────────────────────────
-    if DISPLAY_SCALE != 1:
-        canvas = cv2.resize(canvas, None, fx=DISPLAY_SCALE, fy=DISPLAY_SCALE,
-                            interpolation=cv2.INTER_NEAREST)
+    # ── Scale window by zoom factor ─────────────────────────────────────
+    if actual_zoom != 1.0:
+        canvas = cv2.resize(canvas, (int(fw * actual_zoom), int(fh * actual_zoom)),
+                            interpolation=cv2.INTER_LINEAR)
 
     cv2.imshow(WIN, canvas)
 
