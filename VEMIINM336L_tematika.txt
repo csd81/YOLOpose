@@ -1,0 +1,29 @@
+Műszaki Informatikai Kar
+
+Készítettem egy áttekinthető összefoglalót a legfontosabb tudnivalókról és követelményekről:
+
+### 📌 A tantárgy alapadatai
+* [cite_start]**Tárgyfelelős:** Dr. Magyar Attila [cite: 17]
+* [cite_start]**Cél:** A hallgató önálló kutatási vagy fejlesztési tevékenységet végez témavezetői irányítás mellett[cite: 24].
+* [cite_start]**Folytatás:** A tárgy keretében elért eredményeket javasolt diplomatémaként továbbvinni[cite: 25].
+
+### 📝 Írásbeli beszámoló követelményei
+* [cite_start]**Terjedelem:** Minimum 20 oldal[cite: 28].
+* [cite_start]**Tartalmi elemek:** * A feladat megfogalmazása[cite: 29].
+    * [cite_start]Irodalom- vagy versenytárselemzés: kutatásnál legalább 8 releváns folyóirat publikáció, fejlesztésnél legalább 2 hasonló műszaki megoldás leírása és hivatkozása[cite: 30, 31, 53].
+    * [cite_start]Saját eredmények összefoglalása egyes szám első személyben[cite: 54].
+    * [cite_start]A saját és a korábbi eredmények összehasonlítása[cite: 55].
+    * [cite_start]Továbbfejlesztési lehetőségek[cite: 56].
+* [cite_start]**Fontos szabály:** Mesterséges intelligencia eszközök alkalmazása a beszámolók készítése során  engedélyezett 
+* [cite_start]**Kiváltás:** Az írásbeli beszámoló kiváltható a félévben benyújtott kari vagy intézményi TDK dolgozattal 
+
+### 🗣️ Szóbeli beszámoló követelményei
+* [cite_start]**Formátum:** 10 perces előadás egy legalább 3 tagú bizottság előtt[cite: 61].
+* [cite_start]**Tartalom:** Tartalmaznia kell a feladat megfogalmazását, az előzményeket, a saját eredmények egyes szám első személyben történő bemutatását, valamint a korábbi eredményekkel való összehasonlítást[cite: 62, 63].
+* [cite_start]**Kiváltás:** A szóbeli kiváltható a félévben tartott TDK előadással[cite: 64].
+
+### ✅ Értékelés és aláírás
+* [cite_start]**Jegy:** Az írásbeli és szóbeli beszámoló egyenlő súllyal számít bele az értékelésbe[cite: 65].
+* [cite_start]**Aláírás feltétele:** A meghirdetett határidők betartása, a szóbeli beszámoló megtartása, és az írásbeli anyag határidőre történő feltöltése a Moodle rendszerbe[cite: 90, 91].
+
+---
