@@ -155,6 +155,25 @@ while cap.isOpened():
     results  = model(frame, verbose=False, conf=CONF, iou=IOU, device=DEVICE)
     canvas   = results[0].plot(boxes=False)
 
+    # ── Standing detection ───────────────────────────────────────────────
+    # Requires all 17 keypoints visible (conf > 0.5) within the bounding box
+    is_standing = False
+    if (len(results) > 0
+            and results[0].boxes is not None
+            and len(results[0].boxes.data) > 0
+            and results[0].keypoints is not None
+            and len(results[0].keypoints.data) > 0):
+        box  = results[0].boxes.data[0]
+        x1, y1, x2, y2 = box[0].item(), box[1].item(), box[2].item(), box[3].item()
+        kp   = results[0].keypoints.data[0]   # shape (17, 3)
+        all_visible = all(kp[i][2].item() > 0.5 for i in range(13))  # 0–12: nose→hips
+        all_inside  = all(
+            x1 <= kp[i][0].item() <= x2 and y1 <= kp[i][1].item() <= y2
+            for i in range(13) if kp[i][2].item() > 0.5
+        )
+        if all_visible and all_inside:
+            is_standing = True
+
     if (len(results) > 0
             and results[0].keypoints is not None
             and len(results[0].keypoints.data) > 0):
@@ -165,7 +184,7 @@ while cap.isOpened():
         def xy(i):  return kpts[i][0].item(), kpts[i][1].item()
 
         # ── Normalization ──────────────────────────────────────────────────
-        if c(5) > 0.5 and c(6) > 0.5:
+        if is_standing and c(5) > 0.5 and c(6) > 0.5:
             ls = np.array(xy(5))   # left  shoulder (kpt 5)
             rs = np.array(xy(6))   # right shoulder (kpt 6)
 
@@ -235,7 +254,7 @@ while cap.isOpened():
 
     # ── Toggle invert on knee raise (edge-triggered) ─────────────────────
     knee_up = False
-    if (len(results) > 0
+    if is_standing and (len(results) > 0
             and results[0].keypoints is not None
             and len(results[0].keypoints.data) > 0):
         kpts = results[0].keypoints.data[0]
@@ -258,6 +277,9 @@ while cap.isOpened():
     fh, fw = canvas.shape[:2]
 
     # ── Gesture badges ─────────────────────────────────────────────────────
+    standing_label = 'STANDING' if is_standing else 'NOT STANDING'
+    standing_color = (0, 255, 0) if is_standing else (0, 0, 255)
+    draw_badge(canvas, standing_label, standing_color, fh - 30)
     draw_badge(canvas, f'Zoom: {zoom_value:.2f}',       (50, 255, 100),  48)
     draw_badge(canvas, f'Bright: {bright_value:.2f}',   (255, 220, 50),  96)
     draw_badge(canvas, f'Red: {red_value:.2f}',         (60, 60, 255),  144)
