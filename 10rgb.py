@@ -1,4 +1,22 @@
 '''
+YOLO keypoints:
+1. Nose
+2. Left Eye
+3. Right Eye
+4. Left Ear
+5. Right Ear
+6. Left Shoulder
+7. Right Shoulder
+8. Left Elbow
+9. Right Elbow
+10. Left Wrist
+11. Right Wrist
+12. Left Hip
+13. Right Hip
+14. Left Knee
+15. Right Knee
+16. Left Ankle
+17. Right Ankle
 ┌───────────────────────────────────────────────────────────┬───────────────────────┐
 │                          Gesture                          │         Effect        │
 ├───────────────────────────────────────────────────────────┼───────────────────────┤
